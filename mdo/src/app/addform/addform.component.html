@@ -1,0 +1,38 @@
+<div class="container">
+  <h2>Create Ministry/Department/Organization</h2>
+  <form class="form-horizontal" [formGroup]="createOrgForm"   (ngSubmit)="createOrg()">
+    <div class="form-group">
+      <label class="control-label col-lg-4" for="mapid">Map ID </label>
+      <div class="col-lg-8">
+        <input type="text" class="form-control" id="mapid" placeholder="Enter mapid " name="mapid" formControlName="mapid">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-lg-4" for="orgcode">Org Code </label>
+      <div class="col-lg-8">
+        <input type="text" class="form-control" id="orgcode" placeholder="Enter Org Code " name="orgcode" formControlName="orgcode">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-lg-4" for="orgname">Org Name </label>
+      <div class="col-lg-8">
+        <input type="text" class="form-control" id="orgname" placeholder="Enter Organization Name " name="orgname" formControlName="orgname">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-lg-4" for="parentmapid">Parent Map ID </label>
+      <div class="col-lg-8">
+        <input type="text" class="form-control" id="parentmapid" placeholder="Enter Parent Map ID " name="parentmapid" formControlName="parentmapid">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-lg-offset-2 col-lg-10">
+        <button type="submit" class="btn btn-info" >   Create  </button>
+      </div>
+    </div>
+  </form>
+</div>
