@@ -8,16 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/org/")
+@RequestMapping("/org")
 public class OrgController {
 
 	@Autowired
 	private OrgServiceImpl orgService;
 
-		@GetMapping("/welcome")
-		public String welcome() {	
-			return "Hello Spring Boot"; 	
-		}
 
 	@PostMapping("/create")
 	public ResponseEntity<ApiResponse> createOrg(@RequestBody Map<String, Object> orgRequest) throws Exception {
