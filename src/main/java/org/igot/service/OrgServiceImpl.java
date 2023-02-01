@@ -1,9 +1,13 @@
 package org.igot.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import org.igot.core.Producer;
 import org.igot.logger.CbExtLogger;
 import org.igot.model.ApiOrgSearchRequest;
+import org.igot.model.ApiRespOrgainsation;
 import org.igot.model.ApiRespParam;
 import org.igot.model.ApiResponse;
 import org.igot.utils.CassandraOperation;
@@ -11,6 +15,8 @@ import org.igot.utils.Constants;
 import org.igot.utils.ProjectUtil;
 import org.igot.utils.ServerProperties;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,6 +29,8 @@ import java.util.stream.Collectors;
 public class OrgServiceImpl implements OrgService {
 
     private CbExtLogger log = new CbExtLogger(getClass().getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrgCreationConsumer.class);
+
 
     @Autowired
     CassandraOperation cassandraOperation;
@@ -30,12 +38,20 @@ public class OrgServiceImpl implements OrgService {
     @Autowired
     ServerProperties configProperties;
 
+    @Autowired
+    Producer kafkaProducer;
+
+    @Autowired
+    ServerProperties serverProperties;
+
 
     public ApiResponse createOrg(Map<String, Object> request) {
 
         ApiResponse response = ProjectUtil.createDefaultResponse(Constants.API_ORG_EXT_CREATE);
 
-        cassandraOperation.insertRecord(Constants.SUNBIRD_KEY_SPACE_NAME, Constants.TABLE_ORG_HIERARCHY, request);
+        kafkaProducer.push(serverProperties.getOrgCreationKafkaTopic(),request);
+
+        //cassandraOperation.insertRecord(Constants.SUNBIRD_KEY_SPACE_NAME, Constants.TABLE_ORG_HIERARCHY, request);
 
         return response;
     }
@@ -137,6 +153,23 @@ public class OrgServiceImpl implements OrgService {
             response.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
+    }
+
+    @Override
+    public void initiateCreateOrgFlow(ApiRespOrgainsation org) {
+
+        /*
+        1. Insert to Cassandra      2. Insert to ES
+         */
+
+        LOGGER.info("Initiated Org Creation flow for mapid :: " + org.getMapid());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> orgMap = objectMapper.convertValue(org, Map.class);
+        cassandraOperation.insertRecord(Constants.SUNBIRD_KEY_SPACE_NAME, Constants.TABLE_ORG_HIERARCHY, orgMap);
+
+
+
     }
 
 
