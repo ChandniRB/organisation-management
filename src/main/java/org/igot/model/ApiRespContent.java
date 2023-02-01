@@ -28,7 +28,7 @@ public class ApiRespContent {
 
 	private String userName;
 
-	private List<ApiRespOragainsation> organisations;
+	private List<ApiRespOrgainsation> organisations;
 
 	private Boolean isMdo;
 
@@ -146,11 +146,11 @@ public class ApiRespContent {
 		this.userName = userName;
 	}
 
-	public List<ApiRespOragainsation> getOrganisations() {
+	public List<ApiRespOrgainsation> getOrganisations() {
 		return organisations;
 	}
 
-	public void setOrganisations(List<ApiRespOragainsation> organisations) {
+	public void setOrganisations(List<ApiRespOrgainsation> organisations) {
 		this.organisations = organisations;
 	}
 
